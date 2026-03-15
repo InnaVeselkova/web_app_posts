@@ -4,11 +4,11 @@ from .views import PostViewSet, CommentViewSet
 
 router = DefaultRouter()
 
-router.register(r'posts', PostViewSet, basename='post')
-router.register(r'comments', CommentViewSet, basename='comment')
+router.register(r"posts", PostViewSet, basename="post")
+router.register(r"comments", CommentViewSet, basename="comment")
 
-app_name = 'app_posts'
+app_name = "app_posts"
 
 urlpatterns = [
-    path('api/', include(router.urls)),
+    path("api/", include(router.urls)),
 ]

@@ -13,13 +13,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         """Настройка прав доступа для каждого действия"""
-        if self.action == 'create':
+        if self.action == "create":
             permission_classes = []
-        elif self.action in ['list', 'retrieve']:
+        elif self.action in ["list", "retrieve"]:
             permission_classes = [IsAuthenticated]
-        elif self.action in ['update', 'partial_update']:
+        elif self.action in ["update", "partial_update"]:
             permission_classes = [IsAuthenticated]
-        elif self.action == 'destroy':
+        elif self.action == "destroy":
             permission_classes = [IsAdminUser]
         else:
             permission_classes = [IsAuthenticated]
@@ -28,10 +28,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def _check_ownership(self, obj):
         """Проверка: пользователь может редактировать только себя"""
         if obj.id != self.request.user.id and not self.request.user.is_staff:
-            return Response(
-                {'error': 'Вы можете редактировать только свой профиль'},
-                status=status.HTTP_403_FORBIDDEN
-            )
+            return Response({"error": "Вы можете редактировать только свой профиль"}, status=status.HTTP_403_FORBIDDEN)
         return None
 
     def update(self, request, *args, **kwargs):
@@ -49,4 +46,3 @@ class UserViewSet(viewsets.ModelViewSet):
         if error_response:
             return error_response
         return super().partial_update(request, *args, **kwargs)
-

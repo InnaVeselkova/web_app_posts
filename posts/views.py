@@ -2,10 +2,7 @@ from rest_framework import viewsets, permissions, exceptions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Post, Comment
-from .serializers import (
-    PostSerializer, PostCreateSerializer,
-    CommentSerializer, CommentCreateSerializer
-)
+from .serializers import PostSerializer, PostCreateSerializer, CommentSerializer, CommentCreateSerializer
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -14,12 +11,12 @@ class PostViewSet(viewsets.ModelViewSet):
     ViewSet для работы с постами.
     """
 
-    queryset = Post.objects.select_related('author').all()
+    queryset = Post.objects.select_related("author").all()
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         """Выбираем сериализатор в зависимости от действия"""
-        if self.action == 'create':
+        if self.action == "create":
             return PostCreateSerializer
         return PostSerializer
 
@@ -39,11 +36,11 @@ class PostViewSet(viewsets.ModelViewSet):
             raise exceptions.PermissionDenied("Вы можете удалять только свои посты.")
         instance.delete()
 
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=["get"])
     def comments(self, request, pk=None):
         """Получить все комментарии к посту"""
         post = self.get_object()
-        comments = post.comments.select_related('author').all()
+        comments = post.comments.select_related("author").all()
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
 
@@ -53,12 +50,12 @@ class CommentViewSet(viewsets.ModelViewSet):
     ViewSet для работы с комментариями.
     """
 
-    queryset = Comment.objects.select_related('author', 'post').all()
+    queryset = Comment.objects.select_related("author", "post").all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_serializer_class(self):
         """Выбираем сериализатор в зависимости от действия"""
-        if self.action == 'create':
+        if self.action == "create":
             return CommentCreateSerializer
         return CommentSerializer
 
